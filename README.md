@@ -5,3 +5,6 @@ pip install virtualenv
 virtualenv env
 source env/bin/activate
 pip install -r requirement.txt
+p
+# To save new requirements.txt
+pip freeze > requirement.txt
