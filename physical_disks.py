@@ -6,6 +6,7 @@ import os
 DISK_PATH_DIR = "/dev/disk/by-path/"
 DISK_ID_DIR = "/dev/disk/by-id/"
 DISK_SIZE_CMD = "lsblk -o SIZE /dev/{name} | head -n 2 | tail -n 1".format
+IS_HDD_CMD = "cat /sys/block/{name}/queue/rotational".format
 FS_LABEL_DIR = "/dev/disk/by-label/"
 PART_LABEL_DIR = "/dev/disk/by-partlabel/"
 FS_UUID_DIR = "/dev/disk/by-uuid/"
@@ -47,6 +48,9 @@ def create_lookup(pairTupleArray,index=0):
 
 def getDiskSize(disk_name):
     return os.popen(DISK_SIZE_CMD(name=disk_name)).read().strip()
+
+def isHdd(disk_name):
+    return os.popen(IS_HDD_CMD(name=disk_name)).read().strip()
 
 def main():
     disk_paths = fetchDiskPaths()

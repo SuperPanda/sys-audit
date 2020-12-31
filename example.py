@@ -40,6 +40,7 @@ fs_uuid = create_lookup(fetchFSUuid(partition_by_name.keys()),index=1)
 result = {
     disk_name: {
         'device': disk_name,
+        'is_hdd': 'yes' if isHdd(disk_name) == '1' else 'no',
         'size': disk_size_by_device[disk_name],
         'id': disk_id_by_device[disk_name],
         'path': disk_paths_by_device[disk_name],
@@ -56,3 +57,19 @@ result = {
 }
 
 pprint.pprint(result)
+
+def nonull(arg):
+    return arg if arg is not None else ''
+
+row1 = "\n--------|  {path:50s}  {id:56s}  {device:^10s} {size:^10s} is_hdd:{is_hdd:^5s}".format
+row2 = "        |  {path:50s} | {part_label:<40s} | {fs_label:<12s} | {part_name:^8s} | {part_size:^8s} |".format
+output = []
+for disk in result.values():
+    output.append((disk['path'],row1(path=disk['path'],id=disk['id'],device=disk['device'],size=disk['size'],is_hdd=disk['is_hdd']),disk['device']))
+output.sort(key = lambda x: x[2])
+for o in output:
+    print(o[1])
+    #output2 = []
+    for p in result[o[2]]['partitions'].values():
+        print(row2(part_name=p['part_name'],path=p['path'],part_label=nonull(p['part_label']),fs_label=nonull(p['fs_label']),part_size=p['part_size']))
+
